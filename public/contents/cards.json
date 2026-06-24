@@ -4,7 +4,7 @@
         "bind": "工程系列",
         "subtitle": "点击任意位置进入",
         "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "/directions",
+        "pic": "./directions.webp",
         "stamp":"./123.webp"
     },
     {
@@ -12,7 +12,7 @@
         "bind": "会计师",
         "subtitle": "点击任意位置进入",
         "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "/directions",
+        "pic": "./directions.webp",
         "stamp":"./123.webp"
     },
     {
@@ -20,7 +20,7 @@
         "bind": "经济师",
         "subtitle": "点击任意位置进入",
         "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "/directions",
+        "pic": "./directions.webp",
         "stamp":"./123.webp"
     },
     {
@@ -28,7 +28,7 @@
         "bind": "农业系列",
         "subtitle": "点击任意位置进入",
         "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "/directions",
+        "pic": "./directions.webp",
         "stamp":"./123.webp"
     },
     {
@@ -36,7 +36,7 @@
         "bind": "审计师",
         "subtitle": "点击任意位置进入",
         "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "/directions",
+        "pic": "./directions.webp",
         "stamp":"./123.webp"
     },
     {
@@ -44,7 +44,7 @@
         "bind": "统计师",
         "subtitle": "点击任意位置进入",
         "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "/directions",
+        "pic": "./directions.webp",
         "stamp":"./123.webp"
     },
     {
@@ -52,7 +52,7 @@
         "bind": "政工师",
         "subtitle": "点击任意位置进入",
         "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "/directions",
+        "pic": "./directions.webp",
         "stamp":"./123.webp"
     }
 ]

@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import DirectionView from '../views/DirectionView.vue'
 import IntakeView from '../views/IntakeView.vue'
 import DashboardView from '../views/DashboardView.vue'
+import StageDetailView from '../views/StageDetailView.vue'
 
 const routes = [
   {
@@ -22,13 +23,19 @@ const routes = [
     path: '/intake',
     name: 'intake',
     component: IntakeView,
-    meta: { title: '信息收集', pageTitle: '问心录', subtitle: '录入成长信息' }
+    meta: { title: '资质选择', pageTitle: '选择资质', subtitle: '选择你的修行起点', rightLabel: '总览' }
   },
   {
     path: '/dashboard',
     name: 'dashboard',
     component: DashboardView,
-    meta: { title: '数据展示', pageTitle: '命盘总览', subtitle: '查看成长结果' }
+    meta: { title: '路线总览', pageTitle: '修行年限', subtitle: '修行岁月，境界可期', rightLabel: '总览' }
+  },
+  {
+    path: '/stage-detail',
+    name: 'stage-detail',
+    component: StageDetailView,
+    meta: { title: '详情展示', pageTitle: '详情展示', subtitle: '阶段卷宗', rightLabel: '总览' }
   }
 ]
 

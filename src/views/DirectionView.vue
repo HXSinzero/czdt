@@ -24,6 +24,7 @@ const imagePattern = /\.(png|jpe?g|webp|gif|bmp|svg)(\?.*)?$/i
 const directions = computed(() => cards.value.map((card, index) => ({
   id: card.id || card.title || `card-${index}`,
   label: card.title,
+  bind: card.bind || card.title || '',
   intro: card.discription || '',
   trait: card.subtitle || '',
   motto: card.motto || card.subtitle || '',
@@ -142,8 +143,13 @@ function onCardClick(index) {
   }
 }
 
-function goIntake() {
-  router.push('/intake')
+function goIntake(direction) {
+  router.push({
+    path: '/intake',
+    query: {
+      direction: direction?.bind || direction?.label || ''
+    }
+  })
 }
 
 function getStepLabel(index) {
@@ -192,7 +198,7 @@ function getCardImageUrl(path) {
             <p class="path-card__intro">{{ direction.intro }}</p>
             <strong>{{ direction.motto }}</strong>
           </div>
-          <button type="button" @click.stop="goIntake">查看详情</button>
+          <button type="button" @pointerdown.stop @click.stop="goIntake(direction)">查看详情</button>
         </div>
       </article>
     </section>
