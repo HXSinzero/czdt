@@ -13,9 +13,18 @@ function handleShellClick() {
 </script>
 
 <template>
-  <AppShell @click="handleShellClick">
-    <RouterView v-slot="{ Component }">
-      <component :is="Component" />
-    </RouterView>
+  <AppShell>
+    <section class="route-touch-area" @click="handleShellClick">
+      <RouterView v-slot="{ Component }">
+        <component :is="Component" />
+      </RouterView>
+    </section>
   </AppShell>
 </template>
+
+<style scoped>
+.route-touch-area {
+  height: 100%;
+  min-height: 0;
+}
+</style>

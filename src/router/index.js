@@ -10,7 +10,7 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView,
-    meta: { title: '主页', pageTitle: '职页成长', subtitle: '点击任意位置进入' }
+    meta: { title: '主页', pageTitle: '职业成长', subtitle: '' }
   },
   {
     path: '/directions',

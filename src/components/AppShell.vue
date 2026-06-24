@@ -12,6 +12,15 @@ const rightLabel = computed(() => route.meta.rightLabel || '')
 
 function goBack() {
   if (route.name === 'home') return
+  if (window.history.length > 1) {
+    router.back()
+    return
+  }
+
+  router.push('/')
+}
+
+function goHome() {
   router.push('/')
 }
 </script>
@@ -19,7 +28,7 @@ function goBack() {
 <template>
   <main class="app-shell">
     <header class="app-topbar">
-      <button class="nav-orb" type="button" :aria-label="showBack ? '返回' : '首页'" @click="goBack">
+      <button class="nav-orb" type="button" :aria-label="showBack ? '返回' : '首页'" @click.stop="goBack">
         <span v-if="showBack" class="back-mark"></span>
         <span v-else class="home-mark">职</span>
       </button>
@@ -30,7 +39,7 @@ function goBack() {
         <p v-if="subtitle">{{ subtitle }}</p>
       </div>
 
-      <button class="overview-orb" type="button" :aria-label="rightLabel || '总览'">
+      <button class="overview-orb" type="button" :aria-label="rightLabel || '总览'" @click.stop="goHome">
         <span></span>
         <b>{{ rightLabel || '总览' }}</b>
       </button>
@@ -156,7 +165,7 @@ function goBack() {
 .app-title h1 {
   margin: 0;
   color: #fff6e6;
-  font-family: "STKaiti", "KaiTi", "Songti SC", serif;
+  font-family: var(--app-font);
   font-size: 36px;
   line-height: 1;
   letter-spacing: 0;
@@ -168,7 +177,7 @@ function goBack() {
 .app-title p {
   margin: 0;
   color: #f7e7c8;
-  font-family: "STKaiti", "KaiTi", "Songti SC", serif;
+  font-family: var(--app-font);
   font-size: 17px;
   font-weight: 700;
 }

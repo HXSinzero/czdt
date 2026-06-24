@@ -1,78 +1,54 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { getPublicAssetUrl } from '../config'
 
 const router = useRouter()
 const activeIndex = ref(0)
 const dragOffset = ref(0)
 const isDragging = ref(false)
 const suppressClick = ref(false)
+const cards = ref([])
 
 const cardStep = 196
 const swipeThreshold = 64
+const cardsBaseDir = 'contents'
 const dragState = {
   pointerId: null,
   startX: 0,
   moved: false
 }
 
-const directions = [
-  {
-    id: 'sword',
-    label: '剑修',
-    intro: '极致输出，快意恩仇的道友。',
-    trait: '高爆发 · 高机动 · 攻守兼备',
-    motto: '执剑破云，锋芒自成道。',
-    tone: 'sky'
-  },
-  {
-    id: 'alchemy',
-    label: '丹修',
-    intro: '稳步发展，厚积薄发的道友。',
-    trait: '稳定成长 · 辅助增益',
-    motto: '炉火不息，万物皆可化机缘。',
-    tone: 'jade'
-  },
-  {
-    id: 'talisman',
-    label: '符修',
-    intro: '善于布局，掌控全局的道友。',
-    trait: '远程控制 · 持续伤害',
-    motto: '一笔落符，天地听令。',
-    tone: 'violet'
-  },
-  {
-    id: 'body',
-    label: '体修',
-    intro: '正面推进，抗压成势的道友。',
-    trait: '高生存 · 强突破',
-    motto: '炼骨为山，寸步不退。',
-    tone: 'ember'
-  },
-  {
-    id: 'array',
-    label: '阵修',
-    intro: '谋定后动，后发制人的道友。',
-    trait: '全局掌控 · 团队增幅',
-    motto: '一阵既起，万象归位。',
-    tone: 'gold'
-  },
-  {
-    id: 'arraay',
-    label: '阵修2',
-    intro: '谋定后动，后发制人的道友。',
-    trait: '全局掌控 · 团队增幅',
-    motto: '一阵既起，万象归位。',
-    tone: 'gold'
-  }
-]
+const tones = ['sky', 'jade', 'violet', 'ember', 'gold']
+const imagePattern = /\.(png|jpe?g|webp|gif|bmp|svg)(\?.*)?$/i
+const directions = computed(() => cards.value.map((card, index) => ({
+  id: card.id || card.title || `card-${index}`,
+  label: card.title,
+  intro: card.discription || '',
+  trait: card.subtitle || '',
+  motto: card.motto || card.subtitle || '',
+  pic: card.pic || '',
+  stamp: card.stamp || '',
+  tone: card.tone || tones[index % tones.length]
+})))
+
+onMounted(async () => {
+  const response = await fetch(getPublicAssetUrl('contents/cards.json'))
+  cards.value = await response.json()
+})
+
+function isImagePath(value) {
+  return typeof value === 'string' && imagePattern.test(value)
+}
 
 function wrapIndex(index) {
-  return (index + directions.length) % directions.length
+  const total = directions.value.length
+  if (!total) return 0
+  return (index + total) % total
 }
 
 function getLoopOffset(index) {
-  const total = directions.length
+  const total = directions.value.length
   let offset = index - activeIndex.value
 
   if (offset > total / 2) offset -= total
@@ -169,6 +145,22 @@ function onCardClick(index) {
 function goIntake() {
   router.push('/intake')
 }
+
+function getStepLabel(index) {
+  return directions.value[index]?.label?.trim().charAt(0) || String(index + 1)
+}
+
+function getCardBackground(direction) {
+  if (!isImagePath(direction.pic)) return {}
+
+  return {
+    backgroundImage: `url("${getPublicAssetUrl(direction.pic, cardsBaseDir)}")`
+  }
+}
+
+function getCardImageUrl(path) {
+  return getPublicAssetUrl(path, cardsBaseDir)
+}
 </script>
 
 <template>
@@ -186,23 +178,20 @@ function goIntake() {
         v-for="(direction, index) in directions"
         :key="direction.id"
         class="path-card"
-        :class="[`tone-${direction.tone}`, { active: activeIndex === index }]"
-        :style="getCardStyle(index)"
+        :class="{ active: activeIndex === index }"
+        :style="[getCardStyle(index), getCardBackground(direction)]"
         @click="onCardClick(index)"
       >
-        <div class="path-card__scene" aria-hidden="true">
-          <i class="mountain mountain-left"></i>
-          <i class="mountain mountain-right"></i>
-          <b class="aura"></b>
-          <b class="figure"></b>
-        </div>
-
         <div class="path-card__content">
-          <span class="path-card__seal">{{ String(index + 1).padStart(2, '0') }}</span>
-          <h2>{{ direction.label }}</h2>
-          <p class="path-card__trait">终点 {{ direction.trait }}</p>
-          <p class="path-card__intro">{{ direction.intro }}</p>
-          <strong>{{ direction.motto }}</strong>
+          <img v-if="isImagePath(direction.stamp)" class="path-card__stamp" :src="getCardImageUrl(direction.stamp)" alt="" />
+          <div class="path-card__title-zone">
+            <h2>{{ direction.label }}</h2>
+          </div>
+          <div class="path-card__text-zone">
+            <p class="path-card__trait">终点 {{ direction.trait }}</p>
+            <p class="path-card__intro">{{ direction.intro }}</p>
+            <strong>{{ direction.motto }}</strong>
+          </div>
           <button type="button" @click.stop="goIntake">查看详情</button>
         </div>
       </article>
@@ -214,7 +203,7 @@ function goIntake() {
         <p>左右滑动选择</p>
       </div>
 
-      <div class="path-steps" :style="{ '--step-count': directions.length }" aria-label="修行路径">
+      <div class="path-steps" :style="{ '--step-count': directions.length || 1 }" aria-label="修行路径">
         <button
           v-for="(direction, index) in directions"
           :key="direction.id"
@@ -224,7 +213,7 @@ function goIntake() {
           :aria-label="`查看${direction.label}`"
           @click="selectDirection(index)"
         >
-          <span>{{ index + 1 }}</span>
+          <span style="font-family: 'zydt';">{{ getStepLabel(index) }}</span>
         </button>
       </div>
     </footer>
@@ -265,8 +254,8 @@ function goIntake() {
 
 .path-card {
   position: absolute;
-  top: 12px;
-  bottom: 14px;
+  top: 30px;
+  bottom: 34px;
   left: 50%;
   display: grid;
   width: min(74vw, 318px);
@@ -274,6 +263,10 @@ function goIntake() {
   border: 1px solid rgba(250, 223, 159, 0.74);
   border-radius: 24px;
   color: #ffffff;
+  background-color: transparent;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   transform-style: preserve-3d;
   user-select: none;
   -webkit-user-select: none;
@@ -302,88 +295,36 @@ function goIntake() {
     0 7px 14px rgba(4, 10, 18, 0.48);
 }
 
-.path-card.tone-sky {
-  background:
-    linear-gradient(180deg, rgba(242, 250, 255, 0.78), rgba(85, 137, 183, 0.34) 48%, rgba(18, 42, 68, 0.86)),
-    radial-gradient(circle at 50% 42%, rgba(174, 215, 255, 0.9), transparent 28%),
-    #8ebfe6;
-}
-
-.path-card.tone-jade {
-  background:
-    linear-gradient(180deg, rgba(204, 237, 221, 0.7), rgba(60, 118, 96, 0.48) 52%, rgba(11, 37, 32, 0.9)),
-    radial-gradient(circle at 48% 55%, rgba(115, 224, 164, 0.78), transparent 24%),
-    #386b5d;
-}
-
-.path-card.tone-violet {
-  background:
-    linear-gradient(180deg, rgba(220, 214, 248, 0.72), rgba(100, 78, 150, 0.52) 50%, rgba(36, 25, 58, 0.92)),
-    radial-gradient(circle at 54% 56%, rgba(178, 139, 242, 0.78), transparent 26%),
-    #5a5188;
-}
-
-.path-card.tone-ember {
-  background:
-    linear-gradient(180deg, rgba(252, 219, 181, 0.72), rgba(151, 87, 45, 0.52) 50%, rgba(55, 26, 18, 0.92)),
-    radial-gradient(circle at 50% 58%, rgba(255, 138, 73, 0.7), transparent 26%),
-    #80492f;
-}
-
-.path-card.tone-gold {
-  background:
-    linear-gradient(180deg, rgba(250, 232, 184, 0.72), rgba(153, 119, 58, 0.5) 50%, rgba(50, 38, 21, 0.92)),
-    radial-gradient(circle at 50% 55%, rgba(255, 219, 123, 0.72), transparent 28%),
-    #8e6d3e;
-}
-
-.path-card::before {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  content: "";
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent 22%, transparent 64%, rgba(10, 24, 42, 0.78)),
-    radial-gradient(circle at 50% 34%, rgba(255, 255, 255, 0.54), transparent 24%);
-}
-
-.path-card__scene {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-.mountain,
-.aura,
-.figure {
-  position: absolute;
-  display: block;
-  pointer-events: none;
-}
 .path-card__content {
   position: relative;
   z-index: 2;
   display: grid;
-  align-content: start;
+  grid-template-rows: 230px minmax(0, 1fr) 112px;
   min-height: 100%;
-  padding: 28px 24px 24px;
+  padding: 18px 24px 24px;
   text-align: center;
 }
 
-.path-card__seal {
-  justify-self: start;
-  color: rgba(255, 247, 222, 0.78);
-  font-family: Georgia, serif;
-  font-size: 13px;
-  font-weight: 900;
+.path-card__stamp {
+  position: absolute;
+  top: 46px;
+  right: 34px;
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.path-card__title-zone {
+  display: grid;
+  min-height: 0;
+  place-items: center;
 }
 
 .path-card__content h2 {
-  margin: 12px 0 0;
+  margin: 0;
   color: #173d72;
-  font-family: "STKaiti", "KaiTi", "Songti SC", serif;
-  font-size: 64px;
+  font-family: var(--app-font);
+  font-size: 60px;
   line-height: 0.95;
   letter-spacing: 0;
   text-shadow: 0 2px 0 rgba(255, 255, 255, 0.34);
@@ -391,11 +332,18 @@ function goIntake() {
   justify-self: center;
 }
 
+.path-card__text-zone {
+  display: grid;
+  min-height: 0;
+  overflow: hidden;
+  align-content: start;
+}
+
 .path-card__trait {
   align-self: end;
-  margin: auto 0 0;
+  margin: 0;
   color: #f7f0de;
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 900;
   line-height: 1.6;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.46);
@@ -404,24 +352,24 @@ function goIntake() {
 .path-card__intro {
   margin: 8px 0 0;
   color: rgba(255, 255, 255, 0.88);
-  font-size: 13px;
-  line-height: 1.65;
+  font-size: 15px;
+  line-height: 1.7;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
 }
 
 .path-card__content strong {
   margin-top: 8px;
   color: #ffffff;
-  font-size: 15px;
+  font-size: 18px;
   line-height: 1.5;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.42);
 }
 
 .path-card__content button {
+  align-self: center;
   justify-self: center;
-  min-width: 154px;
-  min-height: 44px;
-  margin-top: 18px;
+  min-width: 174px;
+  min-height: 50px;
   border: 1px solid #d2a96a;
   border-radius: 999px;
   color: #6c4423;
@@ -429,8 +377,8 @@ function goIntake() {
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.68),
     0 6px 14px rgba(37, 21, 10, 0.22);
-  font-family: "STKaiti", "KaiTi", "Songti SC", serif;
-  font-size: 18px;
+  font-family: var(--app-font);
+  font-size: 21px;
   font-weight: 900;
 }
 
@@ -439,8 +387,8 @@ function goIntake() {
   z-index: 5;
   display: grid;
   justify-items: center;
-  gap: 14px;
-  padding: 0 16px;
+  gap: 18px;
+  padding: 0 18px;
   background: transparent;
   pointer-events: none;
 }
@@ -452,16 +400,16 @@ function goIntake() {
 .swipe-hint {
   display: grid;
   justify-items: center;
-  gap: 5px;
+  gap: 7px;
   color: #f3ead9;
-  font-family: "STKaiti", "KaiTi", "Songti SC", serif;
-  font-size: 18px;
+  font-family: var(--app-font);
+  font-size: 22px;
   text-shadow: 0 0 12px rgba(255, 232, 186, 0.22);
 }
 
 .swipe-hint span {
-  width: 168px;
-  height: 1px;
+  width: 220px;
+  height: 2px;
   background: linear-gradient(90deg, transparent, rgba(246, 225, 177, 0.46), transparent);
 }
 
@@ -501,19 +449,9 @@ function goIntake() {
   position: relative;
   display: grid;
   grid-template-columns: repeat(var(--step-count), 1fr);
-  gap: 4px;
-  width: min(100%, 340px);
+  gap: 6px;
+  width: min(100%, 390px);
   margin: 0 auto;
-}
-
-.path-steps::before {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  left: 18px;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(255, 215, 134, 0.9), rgba(230, 238, 238, 0.42));
-  content: "";
 }
 
 .path-step {
@@ -530,8 +468,8 @@ function goIntake() {
 
 .path-step span {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 50px;
+  height: 50px;
   place-items: center;
   border: 1px solid rgba(225, 239, 237, 0.45);
   border-radius: 50%;
@@ -540,7 +478,7 @@ function goIntake() {
     inset 0 0 12px rgba(255, 255, 255, 0.1),
     0 0 10px rgba(255, 255, 255, 0.08);
   font-family: Georgia, serif;
-  font-size: 19px;
+  font-size: 24px;
   font-weight: 900;
 }
 
@@ -575,21 +513,23 @@ function goIntake() {
 
   .path-card {
     width: min(70vw, 300px);
-    top: 8px;
-    bottom: 8px;
+    top: 18px;
+    bottom: 20px;
+  }
+
+  .path-card__content {
+    grid-template-rows: 188px minmax(0, 1fr) 86px;
+    padding: 14px 22px 18px;
   }
 
   .path-card__content h2 {
-    font-size: 50px;
-  }
-
-  .path-card__scene .figure {
-    height: 142px;
+    font-size: 60px;
   }
 
   .path-card__content button {
-    min-height: 38px;
-    margin-top: 10px;
+    min-height: 42px;
+    min-width: 150px;
+    font-size: 18px;
   }
 
   .swipe-hint {
@@ -597,13 +537,9 @@ function goIntake() {
   }
 
   .path-step span {
-    width: 34px;
-    height: 34px;
-    font-size: 17px;
-  }
-
-  .path-steps::before {
-    top: 16px;
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
   }
 }
 </style>
