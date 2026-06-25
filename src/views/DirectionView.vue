@@ -235,7 +235,7 @@ function getCardImageUrl(path) {
   margin: 0;
   padding: 0 0 22px;
   overflow: hidden;
-  color: #f8ecd5;
+  color: var(--ink);
 }
 
 .carousel-stage {
@@ -266,9 +266,9 @@ function getCardImageUrl(path) {
   display: grid;
   width: min(74vw, 318px);
   overflow: hidden;
-  border: 1px solid rgba(250, 223, 159, 0.74);
+  border: 1px solid rgba(91, 131, 118, 0.54);
   border-radius: 24px;
-  color: #ffffff;
+  color: var(--ink);
   background-color: transparent;
   background-position: center;
   background-size: cover;
@@ -277,8 +277,8 @@ function getCardImageUrl(path) {
   user-select: none;
   -webkit-user-select: none;
   box-shadow:
-    inset 0 0 10px rgba(255, 255, 255, 0.12),
-    0 3px 7px rgba(0, 0, 0, 0.26);
+    inset 0 0 10px rgba(255, 255, 255, 0.34),
+    0 8px 18px rgba(43, 83, 72, 0.18);
   transition:
     transform 220ms ease,
     opacity 220ms ease,
@@ -296,9 +296,9 @@ function getCardImageUrl(path) {
 
 .path-card.active {
   box-shadow:
-    0 0 0 1px rgba(255, 247, 211, 0.8),
-    0 0 10px rgba(255, 225, 154, 0.88),
-    0 7px 14px rgba(4, 10, 18, 0.48);
+    0 0 0 1px rgba(241, 250, 244, 0.78),
+    0 0 16px rgba(101, 157, 139, 0.42),
+    0 10px 22px rgba(43, 83, 72, 0.2);
 }
 
 .path-card__content {
@@ -328,7 +328,7 @@ function getCardImageUrl(path) {
 
 .path-card__content h2 {
   margin: 0;
-  color: #173d72;
+  color: var(--ink);
   font-family: var(--app-font);
   font-size: 60px;
   line-height: 0.95;
@@ -348,7 +348,7 @@ function getCardImageUrl(path) {
 .path-card__trait {
   align-self: end;
   margin: 0;
-  color: #f7f0de;
+  color: var(--paper);
   font-size: 17px;
   font-weight: 900;
   line-height: 1.6;
@@ -357,7 +357,7 @@ function getCardImageUrl(path) {
 
 .path-card__intro {
   margin: 8px 0 0;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(246, 250, 244, 0.9);
   font-size: 15px;
   line-height: 1.7;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
@@ -365,7 +365,7 @@ function getCardImageUrl(path) {
 
 .path-card__content strong {
   margin-top: 8px;
-  color: #ffffff;
+  color: var(--paper);
   font-size: 18px;
   line-height: 1.5;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.42);
@@ -376,13 +376,13 @@ function getCardImageUrl(path) {
   justify-self: center;
   min-width: 174px;
   min-height: 50px;
-  border: 1px solid #d2a96a;
+  border: 1px solid rgba(91, 131, 118, 0.54);
   border-radius: 999px;
-  color: #6c4423;
-  background: linear-gradient(180deg, #fff7e8, #d9c19b);
+  color: var(--ink);
+  background: linear-gradient(180deg, rgba(249, 253, 247, 0.96), rgba(213, 231, 221, 0.92));
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.68),
-    0 6px 14px rgba(37, 21, 10, 0.22);
+    0 6px 14px rgba(43, 83, 72, 0.18);
   font-family: var(--app-font);
   font-size: 21px;
   font-weight: 900;
@@ -407,16 +407,16 @@ function getCardImageUrl(path) {
   display: grid;
   justify-items: center;
   gap: 7px;
-  color: #f3ead9;
+  color: var(--ink);
   font-family: var(--app-font);
   font-size: 22px;
-  text-shadow: 0 0 12px rgba(255, 232, 186, 0.22);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .swipe-hint span {
   width: 220px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(246, 225, 177, 0.46), transparent);
+  background: linear-gradient(90deg, transparent, rgba(91, 131, 118, 0.42), transparent);
 }
 
 .swipe-hint p {
@@ -468,7 +468,7 @@ function getCardImageUrl(path) {
   min-width: 0;
   padding: 0;
   border: 0;
-  color: rgba(248, 236, 213, 0.78);
+  color: var(--ink-soft);
   background: transparent;
 }
 
@@ -477,28 +477,28 @@ function getCardImageUrl(path) {
   width: 50px;
   height: 50px;
   place-items: center;
-  border: 1px solid rgba(225, 239, 237, 0.45);
+  border: 1px solid rgba(91, 131, 118, 0.42);
   border-radius: 50%;
-  background: rgba(15, 27, 39, 0.52);
+  background: rgba(246, 250, 244, 0.54);
   box-shadow:
-    inset 0 0 12px rgba(255, 255, 255, 0.1),
-    0 0 10px rgba(255, 255, 255, 0.08);
+    inset 0 0 12px rgba(255, 255, 255, 0.42),
+    0 0 10px rgba(91, 131, 118, 0.14);
   font-family: Georgia, serif;
   font-size: 24px;
   font-weight: 900;
 }
 
 .path-step.active {
-  color: #ffe7af;
+  color: var(--ink);
 }
 
 .path-step.active span {
-  border-color: #ffe2a2;
-  background: rgba(64, 43, 20, 0.7);
+  border-color: rgba(82, 128, 115, 0.74);
+  background: rgba(213, 231, 221, 0.82);
   box-shadow:
-    0 0 0 2px rgba(255, 235, 177, 0.22),
-    0 0 18px rgba(255, 207, 105, 0.86),
-    inset 0 0 16px rgba(255, 242, 193, 0.28);
+    0 0 0 2px rgba(246, 250, 244, 0.48),
+    0 0 18px rgba(101, 157, 139, 0.48),
+    inset 0 0 16px rgba(255, 255, 255, 0.38);
 }
 
 @keyframes hintSlide {

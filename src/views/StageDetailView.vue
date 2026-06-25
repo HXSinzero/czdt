@@ -109,7 +109,7 @@ function getStageImage() {
   height: 100%;
   padding: 18px 18px 20px;
   overflow: hidden;
-  color: #fff4dc;
+  color: var(--ink);
 }
 
 .detail-scroll {
@@ -131,12 +131,12 @@ function getStageImage() {
 
 .detail-hero,
 .detail-panel {
-  border: 1px solid rgba(241, 218, 169, 0.24);
+  border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(31, 49, 64, 0.64);
+  background: var(--panel);
   box-shadow:
-    inset 0 0 18px rgba(255, 255, 255, 0.04),
-    0 10px 24px rgba(1, 9, 16, 0.2);
+    inset 0 0 18px rgba(255, 255, 255, 0.34),
+    0 10px 24px var(--shadow-soft);
 }
 
 .detail-hero {
@@ -155,9 +155,9 @@ function getStageImage() {
 .detail-hero__image::after {
   position: absolute;
   inset: 0;
-  border-right: 1px solid rgba(255, 205, 113, 0.58);
+  border-right: 1px solid rgba(91, 131, 118, 0.48);
   border-radius: 0 48% 48% 0;
-  box-shadow: 12px 0 28px rgba(255, 203, 105, 0.2);
+  box-shadow: 12px 0 28px rgba(95, 157, 140, 0.16);
   content: "";
 }
 
@@ -178,7 +178,7 @@ function getStageImage() {
 
 .detail-hero h2 {
   margin: 0;
-  color: #fff0d2;
+  color: var(--ink);
   font-family: var(--app-font);
   font-size: 34px;
   line-height: 1;
@@ -187,14 +187,14 @@ function getStageImage() {
 
 .detail-hero p {
   margin: 0;
-  color: rgba(255, 245, 224, 0.86);
+  color: var(--ink-soft);
   font-size: 15px;
   line-height: 1.75;
 }
 
 .detail-hero strong,
 .detail-hero span {
-  color: #6fca77;
+  color: var(--green);
   font-size: 15px;
   font-weight: 900;
 }
@@ -205,7 +205,7 @@ function getStageImage() {
 
 .detail-panel h3 {
   margin: 0 0 14px;
-  color: #fff0d2;
+  color: var(--ink);
   font-family: var(--app-font);
   font-size: 25px;
   line-height: 1;
@@ -214,7 +214,7 @@ function getStageImage() {
 
 .detail-panel p {
   margin: 0;
-  color: rgba(255, 245, 224, 0.84);
+  color: var(--ink-soft);
   font-size: 15px;
   line-height: 1.85;
 }
@@ -232,15 +232,15 @@ function getStageImage() {
   min-height: 38px;
   padding: 0 12px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.34);
 }
 
 .effect-list strong {
-  color: #fff1d6;
+  color: var(--ink);
 }
 
 .effect-list span {
-  color: #6fca77;
+  color: var(--green);
   font-weight: 900;
 }
 
@@ -248,7 +248,7 @@ function getStageImage() {
   display: grid;
   height: 100%;
   place-items: center;
-  color: #fff2d7;
+  color: var(--ink);
   font-family: var(--app-font);
   font-size: 24px;
 }

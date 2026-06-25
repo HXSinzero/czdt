@@ -1,14 +1,17 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getPublicAssetUrl } from '../config'
 
 const route = useRoute()
 const router = useRouter()
 const growthTree = ref([])
+const levelList = ref([])
 const loading = ref(true)
 const loadError = ref('')
 const isRelatedMajor = ref(true)
+const screenRef = ref(null)
+const scrollingTitleKeys = ref(new Set())
 const sceneImage = `url("${getPublicAssetUrl('contents/directions.webp')}")`
 
 const selectedDirectionName = computed(() => String(route.query.direction || '').trim())
@@ -18,21 +21,53 @@ const selectedDirection = computed(() => {
 })
 const rawQualifications = computed(() => selectedDirection.value?.children || [])
 const hasMajorFilter = computed(() => rawQualifications.value.some((item) => item.root === false))
-const qualifications = computed(() => rawQualifications.value.map(resolveQualification))
+const qualifications = computed(() => rawQualifications.value
+  .map((qualification, index) => ({
+    ...attachLevelMeta(resolveQualification(qualification)),
+    sourceIndex: index
+  }))
+  .sort((current, next) => {
+    const currentLevel = Number(current.level)
+    const nextLevel = Number(next.level)
+
+    if (Number.isFinite(currentLevel) && Number.isFinite(nextLevel)) return currentLevel - nextLevel
+    if (Number.isFinite(currentLevel)) return -1
+    if (Number.isFinite(nextLevel)) return 1
+    return current.sourceIndex - next.sourceIndex
+  }))
 
 onMounted(async () => {
   try {
-    const response = await fetch(getPublicAssetUrl('contents/data.json'))
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    growthTree.value = await response.json()
+    const [dataResponse, levelResponse] = await Promise.all([
+      fetch(getPublicAssetUrl('contents/data.json')),
+      fetch(getPublicAssetUrl('contents/level.json'))
+    ])
+
+    if (!dataResponse.ok) throw new Error(`HTTP ${dataResponse.status}`)
+    growthTree.value = await dataResponse.json()
+
+    if (levelResponse.ok) {
+      levelList.value = await levelResponse.json()
+    }
   } catch (error) {
     loadError.value = '资料暂未载入'
   } finally {
     loading.value = false
+    scheduleTitleMeasure()
   }
+
+  window.addEventListener('resize', scheduleTitleMeasure)
 })
 
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', scheduleTitleMeasure)
+})
+
+watch(qualifications, scheduleTitleMeasure, { flush: 'post' })
+
 function getQualificationIntro(qualification) {
+  if (qualification.description) return qualification.description
+
   const children = qualification.children || []
   if (!children.length) return '暂未收录可行路径，稍后补全。'
 
@@ -77,6 +112,64 @@ function getSpeedLabel(qualification, index) {
   return `适配度 +${score}%`
 }
 
+function getLevelMeta(qualification) {
+  const target = String(qualification.name || '').trim()
+
+  return levelList.value.find((item) => {
+    const keys = String(item.keys || '')
+      .split(';')
+      .map((key) => key.trim())
+      .filter(Boolean)
+
+    return keys.some((key) => target.includes(key))
+  })
+}
+
+function attachLevelMeta(qualification) {
+  const level = getLevelMeta(qualification)
+  if (!level) return qualification
+
+  return {
+    ...qualification,
+    level: level.level,
+    levelName: level.name || '',
+    description: level.description || '',
+    levelPic: level.pic || ''
+  }
+}
+
+function getLevelPic(qualification) {
+  return qualification.levelPic ? `url("${getPublicAssetUrl(qualification.levelPic, 'contents')}")` : sceneImage
+}
+
+function getTitleKey(qualification) {
+  return `${qualification.sourceIndex}-${qualification.name}-${qualification.levelName || ''}-${qualification.major || ''}`
+}
+
+function shouldScrollTitle(qualification) {
+  return scrollingTitleKeys.value.has(getTitleKey(qualification))
+}
+
+async function scheduleTitleMeasure() {
+  await nextTick()
+  measureTitleOverflow()
+}
+
+function measureTitleOverflow() {
+  const root = screenRef.value
+  if (!root) return
+
+  const nextKeys = new Set()
+  root.querySelectorAll('[data-title-key]').forEach((title) => {
+    const key = title.getAttribute('data-title-key')
+    if (key && title.scrollWidth > title.clientWidth + 1) {
+      nextKeys.add(key)
+    }
+  })
+
+  scrollingTitleKeys.value = nextKeys
+}
+
 function selectQualification(qualification) {
   router.push({
     path: '/dashboard',
@@ -90,7 +183,7 @@ function selectQualification(qualification) {
 </script>
 
 <template>
-  <section class="interaction-screen qualification-screen">
+  <section ref="screenRef" class="interaction-screen qualification-screen">
     <div v-if="loading" class="qualification-state">正在翻阅卷宗...</div>
     <div v-else-if="loadError" class="qualification-state">{{ loadError }}</div>
     <div v-else-if="!selectedDirection" class="qualification-state">未找到对应方向</div>
@@ -102,27 +195,26 @@ function selectQualification(qualification) {
       </label>
 
       <div class="qualification-list" aria-label="学历选择">
-      <article
+      <button
         v-for="(qualification, index) in qualifications"
         :key="qualification.name"
+        type="button"
         class="qualification-card"
         :class="{ featured: index === 0 }"
-        :style="{ '--scene-image': sceneImage }"
+        :style="{ '--scene-image': getLevelPic(qualification) }"
+        @click="selectQualification(qualification)"
       >
-        <div class="qualification-card__scene" aria-hidden="true"></div>
-
         <div class="qualification-card__body">
-          <h2>{{ qualification.name }}</h2>
+          <h2
+            :class="{ scrolling: shouldScrollTitle(qualification) }"
+            :data-title-key="getTitleKey(qualification)"
+          >
+            <span>{{ qualification.levelName || qualification.name }}</span>
+          </h2>
           <small v-if="qualification.major">{{ qualification.major }}</small>
           <p>{{ getQualificationIntro(qualification) }}</p>
-          <strong>
-            <span>✽</span>
-            {{ getSpeedLabel(qualification, index) }}
-          </strong>
         </div>
-
-        <button type="button" @click="selectQualification(qualification)">选择此资质</button>
-      </article>
+      </button>
       </div>
     </div>
   </section>
@@ -134,7 +226,7 @@ function selectQualification(qualification) {
   height: 100%;
   padding: 52px 20px 22px;
   overflow: hidden;
-  color: #fff5df;
+  color: var(--ink);
 }
 
 .qualification-content {
@@ -155,13 +247,13 @@ function selectQualification(qualification) {
   gap: 8px;
   min-height: 36px;
   padding: 0 14px;
-  border: 1px solid rgba(246, 216, 153, 0.5);
+  border: 1px solid var(--line-strong);
   border-radius: 999px;
-  color: #f9e9c9;
-  background: rgba(12, 21, 31, 0.32);
+  color: var(--ink);
+  background: rgba(246, 250, 244, 0.68);
   box-shadow:
-    inset 0 0 12px rgba(255, 244, 204, 0.1),
-    0 0 14px rgba(244, 196, 101, 0.18);
+    inset 0 0 12px rgba(255, 255, 255, 0.52),
+    0 0 14px rgba(91, 131, 118, 0.16);
   font-family: var(--app-font);
   font-size: 18px;
   font-weight: 900;
@@ -171,7 +263,7 @@ function selectQualification(qualification) {
   width: 18px;
   height: 18px;
   margin: 0;
-  accent-color: #d8b36f;
+  accent-color: var(--jade);
 }
 
 .qualification-list {
@@ -192,63 +284,81 @@ function selectQualification(qualification) {
 .qualification-card {
   position: relative;
   display: grid;
-  grid-template-columns: 42% minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   min-height: 132px;
+  padding: 0;
   overflow: hidden;
-  border: 1px solid rgba(241, 218, 169, 0.34);
+  border: 1px solid var(--line);
   border-radius: 8px;
+  color: inherit;
   background:
-    linear-gradient(90deg, rgba(11, 23, 35, 0.1), rgba(19, 34, 48, 0.92) 42%, rgba(30, 48, 64, 0.88)),
-    rgba(16, 29, 42, 0.9);
+    linear-gradient(90deg, rgba(246, 250, 244, 0) 0%, rgba(246, 250, 244, 0.18) 32%, rgba(238, 247, 241, 0.72) 56%, rgba(230, 242, 235, 0.94) 76%),
+    var(--scene-image) center / 100% 100% no-repeat,
+    var(--paper-soft);
   box-shadow:
-    inset 0 0 20px rgba(255, 255, 255, 0.05),
-    0 10px 24px rgba(2, 9, 17, 0.24);
+    inset 0 0 20px rgba(255, 255, 255, 0.38),
+    0 10px 24px var(--shadow-soft);
+  text-align: left;
+  touch-action: manipulation;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
+}
+
+.qualification-card:active {
+  border-color: rgba(91, 131, 118, 0.86);
+  box-shadow:
+    inset 0 0 24px rgba(255, 255, 255, 0.46),
+    0 4px 12px rgba(43, 83, 72, 0.2);
+  filter: saturate(1.05) brightness(0.98);
+  transform: scale(0.985);
 }
 
 .qualification-card.featured {
-  border-color: rgba(255, 230, 176, 0.98);
+  border-color: rgba(91, 131, 118, 0.72);
   box-shadow:
-    0 0 0 1px rgba(255, 245, 204, 0.58),
-    0 0 20px rgba(255, 209, 120, 0.72),
-    inset 0 0 18px rgba(255, 239, 195, 0.1);
-}
-
-.qualification-card__scene {
-  min-height: 100%;
-  background:
-    linear-gradient(90deg, rgba(13, 26, 39, 0.05), rgba(17, 30, 42, 0.74)),
-    var(--scene-image) center / cover;
-  filter: saturate(0.82);
-}
-
-.qualification-card:nth-child(2n) .qualification-card__scene {
-  filter: saturate(0.7) hue-rotate(18deg);
-}
-
-.qualification-card:nth-child(3n) .qualification-card__scene {
-  filter: saturate(0.78) hue-rotate(48deg);
+    0 0 0 1px rgba(246, 250, 244, 0.72),
+    0 0 22px rgba(101, 157, 139, 0.36),
+    inset 0 0 18px rgba(255, 255, 255, 0.26);
 }
 
 .qualification-card__body {
   display: grid;
   align-content: center;
+  justify-self: end;
+  width: 58%;
   min-width: 0;
   padding: 16px 18px 54px;
 }
 
 .qualification-card h2 {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
   margin: 0;
-  color: #fff0d5;
+  color: var(--ink);
   font-family: var(--app-font);
   font-size: 32px;
   line-height: 1;
   letter-spacing: 0;
-  text-shadow: 0 0 12px rgba(255, 230, 178, 0.18);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+}
+
+.qualification-card h2 span {
+  display: inline-block;
+  min-width: 100%;
+}
+
+.qualification-card h2.scrolling span {
+  animation: titleMarquee 7.2s linear infinite;
 }
 
 .qualification-card small {
   margin-top: 4px;
-  color: #8ed18f;
+  color: var(--green);
   font-size: 13px;
   font-weight: 900;
   line-height: 1;
@@ -256,9 +366,10 @@ function selectQualification(qualification) {
 
 .qualification-card p {
   margin: 10px 0 0;
-  color: rgba(255, 245, 225, 0.82);
-  font-size: 14px;
-  line-height: 1.55;
+  color: var(--ink-soft);
+  font-size: 17px;
+  line-height: 1.6;
+  white-space: pre-line;
 }
 
 .qualification-card strong {
@@ -266,7 +377,7 @@ function selectQualification(qualification) {
   align-items: center;
   gap: 6px;
   margin-top: 10px;
-  color: #8ed18f;
+  color: var(--green);
   font-size: 14px;
   line-height: 1;
 }
@@ -277,41 +388,35 @@ function selectQualification(qualification) {
   height: 20px;
   place-items: center;
   border-radius: 50%;
-  color: #ffffff;
-  background: rgba(103, 147, 189, 0.9);
+  color: var(--paper);
+  background: rgba(95, 157, 140, 0.86);
   font-size: 12px;
-}
-
-.qualification-card button {
-  position: absolute;
-  right: 16px;
-  bottom: 18px;
-  min-width: 112px;
-  min-height: 34px;
-  padding: 0 16px;
-  border: 1px solid rgba(138, 104, 62, 0.68);
-  border-radius: 4px;
-  color: #6d4420;
-  background:
-    linear-gradient(135deg, transparent 8px, #d7c49f 0) top left,
-    linear-gradient(225deg, transparent 8px, #d7c49f 0) top right,
-    linear-gradient(315deg, transparent 8px, #d7c49f 0) bottom right,
-    linear-gradient(45deg, transparent 8px, #d7c49f 0) bottom left;
-  background-size: 51% 51%;
-  background-repeat: no-repeat;
-  font-family: var(--app-font);
-  font-size: 16px;
-  font-weight: 900;
-  box-shadow: inset 0 0 0 1px rgba(255, 246, 217, 0.4);
 }
 
 .qualification-state {
   display: grid;
   height: 100%;
   place-items: center;
-  color: #fff2d7;
+  color: var(--ink);
   font-family: var(--app-font);
   font-size: 24px;
+}
+
+@keyframes titleMarquee {
+  0%,
+  18% {
+    transform: translateX(0);
+  }
+
+  56%,
+  74% {
+    transform: translateX(-42%);
+  }
+
+  74.1%,
+  100% {
+    transform: translateX(0);
+  }
 }
 
 @media (max-height: 760px) {
@@ -334,6 +439,7 @@ function selectQualification(qualification) {
   }
 
   .qualification-card__body {
+    width: 60%;
     padding: 12px 14px 46px;
   }
 
@@ -343,15 +449,8 @@ function selectQualification(qualification) {
 
   .qualification-card p,
   .qualification-card strong {
-    font-size: 12px;
-  }
-
-  .qualification-card button {
-    right: 12px;
-    bottom: 12px;
-    min-width: 96px;
-    min-height: 30px;
     font-size: 14px;
   }
+
 }
 </style>

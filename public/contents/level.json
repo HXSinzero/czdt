@@ -1,0 +1,37 @@
+[
+    {
+        "level": 1,
+        "name": "专科毕业",
+        "keys": "专科;大专",
+        "pic": "./levels/符.webp",
+        "description": "术有所专，为百工中坚\n执符履职，精进实干。"
+    },
+    {
+        "level": 2,
+        "name": "本科毕业",
+        "keys": "本科",
+        "pic": "./levels/鼎.webp",
+        "description": "学有所成，担扛鼎之责\n立足本职，独当一面。"
+    },
+    {
+        "level": 5,
+        "name": "硕士研究生",
+        "keys": "硕士",
+        "pic": "./levels/爵.webp",
+        "description": "深研一域，具持爵之才\n专精致远，赋能攻坚。"
+    },
+    {
+        "level": 10,
+        "name": "博士研究生",
+        "keys": "博士",
+        "pic": "./levels/璧.webp",
+        "description": "穷理致知，有怀璧之资\n开拓新知，引领突破。"
+    },
+    {
+        "level": 3,
+        "name": "本科双学位/研究生班",
+        "keys": "本科双学位;第二学士学位或研究生班毕业",
+        "pic": "./levels/钟.webp",
+        "description": "兼修两艺，善鸣钟合律\n融会贯通，协同创新。"
+    }
+]

@@ -160,7 +160,7 @@ function goStageDetail(stage) {
   margin: 0;
   padding: 34px 14px 18px;
   overflow: hidden;
-  color: #fff4dc;
+  color: var(--ink);
 }
 
 .timeline-content {
@@ -181,9 +181,11 @@ function goStageDetail(stage) {
   align-items: center;
   padding: 0 14px;
   border-radius: 8px;
-  color: #fff5df;
-  background: rgba(37, 57, 72, 0.72);
-  box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  background: var(--panel);
+  box-shadow:
+    inset 0 0 18px rgba(255, 255, 255, 0.36),
+    0 8px 18px var(--shadow-soft);
 }
 
 .realm-summary p {
@@ -201,7 +203,7 @@ function goStageDetail(stage) {
 }
 
 .realm-summary strong {
-  color: #56b566;
+  color: var(--green);
   font-weight: 900;
 }
 
@@ -228,8 +230,8 @@ function goStageDetail(stage) {
   bottom: 72px;
   left: 65px;
   width: 1px;
-  background: linear-gradient(180deg, transparent, #c99142 16%, #c99142 84%, transparent);
-  box-shadow: 0 0 14px rgba(255, 197, 100, 0.58);
+  background: linear-gradient(180deg, transparent, var(--jade) 16%, var(--jade) 84%, transparent);
+  box-shadow: 0 0 12px rgba(95, 157, 140, 0.32);
   content: "";
 }
 
@@ -248,10 +250,10 @@ function goStageDetail(stage) {
   left: 92px;
   height: 2px;
   overflow: hidden;
-  background: linear-gradient(90deg, transparent, rgba(255, 218, 148, 0.78), rgba(255, 218, 148, 0.22), transparent);
+  background: linear-gradient(90deg, transparent, rgba(91, 131, 118, 0.62), rgba(91, 131, 118, 0.18), transparent);
   box-shadow:
-    0 0 10px rgba(255, 202, 106, 0.48),
-    0 0 18px rgba(255, 232, 172, 0.2);
+    0 0 10px rgba(95, 157, 140, 0.28),
+    0 0 18px rgba(255, 255, 255, 0.18);
   content: "";
 }
 
@@ -259,7 +261,7 @@ function goStageDetail(stage) {
   position: relative;
   z-index: 2;
   padding-right: 18px;
-  color: #ffd890;
+  color: var(--ink);
   font-family: var(--app-font);
   font-size: 17px;
   text-align: right;
@@ -272,9 +274,9 @@ function goStageDetail(stage) {
   right: 7px;
   width: 10px;
   height: 10px;
-  border: 1px solid #fff0c4;
-  background: rgba(172, 111, 39, 0.86);
-  box-shadow: 0 0 12px rgba(255, 207, 113, 0.8);
+  border: 1px solid rgba(246, 250, 244, 0.82);
+  background: rgba(95, 157, 140, 0.88);
+  box-shadow: 0 0 12px rgba(95, 157, 140, 0.46);
   content: "";
   transform: translateY(-50%) rotate(45deg);
 }
@@ -295,22 +297,22 @@ function goStageDetail(stage) {
   min-height: 0;
   padding: 0;
   overflow: hidden;
-  border: 1px solid rgba(241, 218, 169, 0.22);
+  border: 1px solid var(--line);
   border-radius: 8px;
   color: inherit;
-  background: rgba(33, 52, 66, 0.66);
+  background: var(--panel);
   box-shadow:
-    inset 0 0 18px rgba(255, 255, 255, 0.04),
-    0 10px 24px rgba(1, 9, 16, 0.22);
+    inset 0 0 18px rgba(255, 255, 255, 0.34),
+    0 10px 24px var(--shadow-soft);
   text-align: left;
 }
 
 .stage-card.featured {
-  border-color: rgba(255, 226, 158, 0.92);
+  border-color: rgba(91, 131, 118, 0.72);
   box-shadow:
-    0 0 0 1px rgba(255, 238, 190, 0.48),
-    0 0 20px rgba(255, 203, 105, 0.68),
-    inset 0 0 18px rgba(255, 241, 202, 0.08);
+    0 0 0 1px rgba(246, 250, 244, 0.74),
+    0 0 20px rgba(95, 157, 140, 0.34),
+    inset 0 0 18px rgba(255, 255, 255, 0.28);
 }
 
 .stage-card__image {
@@ -329,14 +331,14 @@ function goStageDetail(stage) {
   min-height: 0;
   overflow: hidden;
   padding: 18px 14px;
-  border-left: 1px solid rgba(255, 239, 198, 0.12);
+  border-left: 1px solid var(--line);
 }
 
 .stage-card h2 {
   min-width: 0;
   overflow: hidden;
   margin: 0;
-  color: #fff0d2;
+  color: var(--ink);
   font-family: var(--app-font);
   font-size: 26px;
   line-height: 1;
@@ -346,7 +348,7 @@ function goStageDetail(stage) {
 
 .stage-card p {
   margin: 0;
-  color: rgba(255, 245, 224, 0.84);
+  color: var(--ink-soft);
   font-size: 14px;
   line-height: 1.65;
   overflow: hidden;
@@ -360,18 +362,18 @@ function goStageDetail(stage) {
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 18px;
-  color: #fff4dc;
+  color: var(--ink);
   font-family: var(--app-font);
   font-size: 22px;
 }
 
 .timeline-total span {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(247, 222, 166, 0.66));
+  background: linear-gradient(90deg, transparent, rgba(91, 131, 118, 0.5));
 }
 
 .timeline-total span:last-child {
-  background: linear-gradient(90deg, rgba(247, 222, 166, 0.66), transparent);
+  background: linear-gradient(90deg, rgba(91, 131, 118, 0.5), transparent);
 }
 
 .timeline-total p {
@@ -380,14 +382,14 @@ function goStageDetail(stage) {
 }
 
 .timeline-total strong {
-  color: #56b566;
+  color: var(--green);
 }
 
 .timeline-state {
   display: grid;
   height: 100%;
   place-items: center;
-  color: #fff2d7;
+  color: var(--ink);
   font-family: var(--app-font);
   font-size: 24px;
 }

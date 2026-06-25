@@ -33,7 +33,7 @@
   justify-items: center;
   gap: 10px;
   width: min(100%, 300px);
-  color: #f8ecd5;
+  color: var(--ink);
   text-align: center;
 }
 
@@ -51,7 +51,7 @@
 
 .interaction-placeholder p {
   margin: 0;
-  color: rgba(248, 236, 213, 0.72);
+  color: var(--ink-soft);
   line-height: 1.7;
 }
 </style>

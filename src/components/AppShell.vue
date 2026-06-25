@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getPublicAssetUrl } from '../config'
 
 const route = useRoute()
 const router = useRouter()
@@ -9,6 +10,9 @@ const title = computed(() => route.meta.pageTitle || '职页成长指引')
 const subtitle = computed(() => route.meta.subtitle || '')
 const showBack = computed(() => route.name !== 'home')
 const rightLabel = computed(() => route.meta.rightLabel || '')
+const shellStyle = computed(() => ({
+  '--main-bg': `url("${getPublicAssetUrl('contents/MainBG.webp')}")`
+}))
 
 function goBack() {
   if (route.name === 'home') return
@@ -26,7 +30,7 @@ function goHome() {
 </script>
 
 <template>
-  <main class="app-shell">
+  <main class="app-shell" :style="shellStyle">
     <header class="app-topbar">
       <button class="nav-orb" type="button" :aria-label="showBack ? '返回' : '首页'" @click.stop="goBack">
         <span v-if="showBack" class="back-mark"></span>
@@ -60,11 +64,11 @@ function goHome() {
   height: 100%;
   overflow: hidden;
   margin: 0 auto;
-  color: #f8ecd5;
+  color: var(--ink);
   background:
-    radial-gradient(circle at 50% 42%, rgba(164, 188, 199, 0.3), transparent 38%),
-    radial-gradient(circle at 50% 100%, rgba(104, 131, 146, 0.5), transparent 34%),
-    linear-gradient(180deg, #111d2a 0%, #223545 54%, #102032 100%);
+    linear-gradient(180deg, rgba(248, 252, 246, 0.24), rgba(229, 241, 235, 0.22)),
+    var(--main-bg) center / cover no-repeat,
+    linear-gradient(180deg, #eef6f1 0%, #dceee6 52%, #c6dfd5 100%);
 }
 
 .app-shell::before {
@@ -73,8 +77,8 @@ function goHome() {
   pointer-events: none;
   content: "";
   background:
-    linear-gradient(90deg, rgba(255, 223, 159, 0.08), transparent 16%, transparent 84%, rgba(255, 223, 159, 0.08)),
-    radial-gradient(circle at 50% 8%, rgba(255, 233, 184, 0.08), transparent 22%);
+    linear-gradient(180deg, rgba(248, 252, 246, 0.18), transparent 26%, rgba(229, 241, 235, 0.12)),
+    linear-gradient(90deg, rgba(82, 128, 115, 0.08), transparent 18%, transparent 82%, rgba(82, 128, 115, 0.08));
 }
 
 .app-topbar {
@@ -102,15 +106,15 @@ function goHome() {
   min-width: 0;
   height: 54px;
   padding: 0;
-  border: 1px solid rgba(246, 216, 153, 0.72);
+  border: 1px solid rgba(91, 131, 118, 0.5);
   border-radius: 50%;
-  color: #f9e9c9;
+  color: var(--ink);
   background:
-    radial-gradient(circle, rgba(255, 239, 204, 0.18), transparent 58%),
-    rgba(12, 21, 31, 0.28);
+    radial-gradient(circle, rgba(255, 255, 255, 0.7), transparent 62%),
+    rgba(237, 247, 240, 0.46);
   box-shadow:
-    0 0 18px rgba(244, 196, 101, 0.42),
-    inset 0 0 12px rgba(255, 244, 204, 0.16);
+    0 0 18px rgba(87, 134, 119, 0.22),
+    inset 0 0 12px rgba(255, 255, 255, 0.58);
 }
 
 .back-mark {
@@ -164,19 +168,19 @@ function goHome() {
 
 .app-title h1 {
   margin: 0;
-  color: #fff6e6;
+  color: var(--ink);
   font-family: var(--app-font);
   font-size: 36px;
   line-height: 1;
   letter-spacing: 0;
   text-shadow:
-    0 2px 0 rgba(64, 42, 22, 0.28),
-    0 0 14px rgba(255, 231, 176, 0.22);
+    0 1px 0 rgba(255, 255, 255, 0.64),
+    0 0 14px rgba(100, 145, 130, 0.16);
 }
 
 .app-title p {
   margin: 0;
-  color: #f7e7c8;
+  color: var(--ink-soft);
   font-family: var(--app-font);
   font-size: 17px;
   font-weight: 700;
@@ -186,7 +190,7 @@ function goHome() {
   position: relative;
   width: min(100%, 210px);
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(247, 222, 166, 0.66), transparent);
+  background: linear-gradient(90deg, transparent, rgba(91, 131, 118, 0.54), transparent);
 }
 
 .title-divider::before,
@@ -195,7 +199,7 @@ function goHome() {
   top: -3px;
   width: 7px;
   height: 7px;
-  border: 1px solid rgba(247, 222, 166, 0.78);
+  border: 1px solid rgba(91, 131, 118, 0.62);
   content: "";
   transform: rotate(45deg);
 }
