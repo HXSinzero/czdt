@@ -2,57 +2,57 @@
     {
         "title": "工程",
         "bind": "工程系列",
-        "subtitle": "点击任意位置进入",
-        "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "./directions.webp",
+        "subtitle": "",
+        "discription": "",
+        "pic": "./characters/工程.webp",
         "stamp":"./123.webp"
     },
     {
         "title": "会计师",
         "bind": "会计师",
-        "subtitle": "点击任意位置进入",
-        "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "./directions.webp",
+        "subtitle": "",
+        "discription": "",
+        "pic": "./characters/会计师.webp",
         "stamp":"./123.webp"
     },
     {
         "title": "经济师",
         "bind": "经济师",
-        "subtitle": "点击任意位置进入",
-        "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "./directions.webp",
+        "subtitle": "",
+        "discription": "",
+        "pic": "./characters/经济师.webp",
         "stamp":"./123.webp"
     },
     {
         "title": "农业",
         "bind": "农业系列",
-        "subtitle": "点击任意位置进入",
-        "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "./directions.webp",
+        "subtitle": "",
+        "discription": "",
+        "pic": "./characters/农业.webp",
         "stamp":"./123.webp"
     },
     {
         "title": "审计师",
         "bind": "审计师",
-        "subtitle": "点击任意位置进入",
-        "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "./directions.webp",
+        "subtitle": "",
+        "discription": "",
+        "pic": "./characters/审计师.webp",
         "stamp":"./123.webp"
     },
     {
         "title": "统计师",
         "bind": "统计师",
-        "subtitle": "点击任意位置进入",
-        "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "./directions.webp",
+        "subtitle": "",
+        "discription": "",
+        "pic": "./characters/统计师.webp",
         "stamp":"./123.webp"
     },
     {
         "title": "政工师",
         "bind": "政工师",
-        "subtitle": "点击任意位置进入",
-        "discription": "会计师是指在会计核算、财务分析、税务筹划等方面具有专业知识和技能的人员。会计师通常在企业、政府机构、会计师事务所等从事会计工作。",
-        "pic": "./directions.webp",
+        "subtitle": "",
+        "discription": "",
+        "pic": "./characters/政工师.webp",
         "stamp":"./123.webp"
     }
 ]

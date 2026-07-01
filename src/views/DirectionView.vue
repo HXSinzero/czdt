@@ -194,7 +194,6 @@ function getCardImageUrl(path) {
             <h2>{{ direction.label }}</h2>
           </div>
           <div class="path-card__text-zone">
-            <p class="path-card__trait">终点 {{ direction.trait }}</p>
             <p class="path-card__intro">{{ direction.intro }}</p>
             <strong>{{ direction.motto }}</strong>
           </div>
@@ -397,6 +396,8 @@ function getCardImageUrl(path) {
   padding: 0 18px;
   background: transparent;
   pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .direction-footer button {

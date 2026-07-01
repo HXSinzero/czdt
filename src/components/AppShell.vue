@@ -92,6 +92,8 @@ function goHome() {
   padding: 18px 16px 8px;
   background: transparent;
   pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .app-topbar button {

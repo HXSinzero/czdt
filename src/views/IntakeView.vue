@@ -300,11 +300,18 @@ function selectQualification(qualification) {
     0 10px 24px var(--shadow-soft);
   text-align: left;
   touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
   transition:
     transform 160ms ease,
     border-color 160ms ease,
     box-shadow 160ms ease,
     filter 160ms ease;
+}
+
+.qualification-card * {
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .qualification-card:active {

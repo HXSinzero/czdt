@@ -87,19 +87,6 @@ function getStageImage() {
         </div>
       </section>
 
-      <section class="detail-panel">
-        <h3>背景故事</h3>
-        <p>{{ storyText }}</p>
-      </section>
-
-      <section class="detail-panel">
-        <h3>资质效果</h3>
-        <div class="effect-list">
-          <p><strong>修行速度</strong><span>+{{ Math.max(5, 35 - Number(stage.year || 1) * 3) }}%</span></p>
-          <p><strong>路径阶段</strong><span>{{ stage.detail ? '含图文资料' : '基础卷宗' }}</span></p>
-          <p><strong>解锁条件</strong><span>{{ qualificationName }}</span></p>
-        </div>
-      </section>
     </div>
   </section>
 </template>
@@ -217,31 +204,6 @@ function getStageImage() {
   color: var(--ink-soft);
   font-size: 15px;
   line-height: 1.85;
-}
-
-.effect-list {
-  display: grid;
-  gap: 12px;
-}
-
-.effect-list p {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: center;
-  min-height: 38px;
-  padding: 0 12px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.34);
-}
-
-.effect-list strong {
-  color: var(--ink);
-}
-
-.effect-list span {
-  color: var(--green);
-  font-weight: 900;
 }
 
 .detail-state {
